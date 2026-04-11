@@ -4,7 +4,6 @@
 
 <!-- ![プロダクト名](https://kc3.me/cms/wp-content/uploads/2026/02/444e7120d5cdd74aa75f7a94bf8821a5-scaled.png) -->
 
-
 <!-- プロダクト名・イメージ画像を差し変えてください
 # チーム名
 ## チーム10 一汁三菜
@@ -23,11 +22,14 @@
   # チーム名
   # キャッチコピー
 -->
-## チーム名
-チーム10 一汁三菜
-## キャッチコピー
-答えられへんねんやったら、一緒に茶でもしばきにいきましょか^^
 
+## チーム名
+
+チーム10 一汁三菜
+
+## キャッチコピー
+
+答えられへんねんやったら、一緒に茶でもしばきにいきましょか^^
 
 # 1. プロダクト概要
 
@@ -79,7 +81,7 @@
 
 不正解なら関西人の会話がそのまま続くので、お題が何かユーザが考え続ける。
 
-[CMはこちら](https://youtu.be/Kf5yTqowlrI)   
+[CMはこちら](https://youtu.be/Kf5yTqowlrI)
 [紹介動画はこちら](https://youtu.be/6dZ70s2YJhc)
 
 ---
@@ -125,22 +127,24 @@
 
 ---
 
-## インフラ
+## インフラ（ハッカソン時）
+
 <p align="center">
   <img width="686" height="435" alt="image" src="https://github.com/user-attachments/assets/f7286ff6-ac04-488c-9a17-c0975677ab8e" />
 </p>
 
 ### セキュアなネットワーク設計（VPC/Subnet分割）
+
 ただEC2を立てるだけでなく、実務で標準とされるセキュアな構成を採用。
 **プライベートサブネットの活用:** アプリケーション（EC2）とデータベース（RDS）をインターネットから直接見えない「プライベートサブネット」に配置し、外部からの直接攻撃を遮断。
 **踏み台サーバー（Bastion）の導入:** 開発者のメンテナンス用アクセスは、パブリックサブネットに配置したBastionサーバー経由のみに限定し、セキュアな運用経路を確保。
 **ALBによるアクセス集約とSSL化:** リクエストの受け口をApplication Load Balancer (ALB) に集約し、AWS Certificate Manager (ACM) と連携して安全なHTTPS通信（SSL終端）を実現。
 
 ### GHCRを活用したEC2への負荷が少ないCI/CD
+
 **ビルド処理のオフロード:** リソースの限られたEC2インスタンス（t2.micro等）内で直接 docker build を行うとメモリ不足（OOM Killer）でフリーズするリスクがある。これを回避するため、ビルド処理をGitHub Actionsの強力なサーバーに委譲した。
 
 **GHCR (GitHub Container Registry) の採用:** GitHub Actionsでビルドした完成品のDockerイメージをGHCRにPushし、EC2側はそれを docker pull するだけの「超軽量なデプロイ」を実現。デプロイ時間の短縮とサーバーの安定稼働を両立した。
-
 
 # 5. UI/UX面でのこだわり
 
@@ -175,6 +179,7 @@
   <p align="center">
     <img width="250" alt="image" src="./frontend/public/chaShibaki.gif" />
   </p>
+
 - **𝕏（Twitter）でのシェア**:
   クイズの結果や面白い会話を、𝕏（旧Twitter）ですぐにシェアできる機能を搭載。
 - **状況に応じたアイコンの変化**:
@@ -189,7 +194,6 @@
 - **没入感のあるフルスクリーン閲覧**:
   余計な UI を排除し、会話の流れに集中できるレイアウトを採用。チャットアプリを使っているかのような感覚でストーリーを読み進められる。
 
-
 ### 🎨 その他
 
 - **モバイルファーストのレスポンシブデザイン**:
@@ -199,7 +203,7 @@
 - **Material Designによる統一感**:
   一貫性のあるデザインシステム（MUI）を採用し、全体として清潔感とプレミアム感のある外観を実現。
 
-  <!-- [使用例のストーリーはこちら](https://youtu.be/Kf5yTqowlrI)   
+  <!-- [使用例のストーリーはこちら](https://youtu.be/Kf5yTqowlrI)
   [紹介動画はこちら](https://youtu.be/6dZ70s2YJhc) -->
 
 ---
@@ -221,6 +225,88 @@
 
 ・事前にAI生成ストーリーを用意しておき、レスポンスを早くする。用意したストーリーのストックが少なくなってきたら自動で生成する。
 
+---
+
+# 7. 環境構築
+
+## 技術スタック
+
+| 領域           | 技術                                |
+| -------------- | ----------------------------------- |
+| フロントエンド | React 19 / TypeScript / Vite / MUI  |
+| バックエンド   | Go (Gin) / GORM                     |
+| データベース   | MySQL 8.4                           |
+| AI             | Gemini API                          |
+| インフラ       | Docker / nginx / AWS (ハッカソン時) |
+
+## 開発環境
+
+### 前提条件
+
+- Docker / Docker Compose
+
+### 起動手順
+
+```bash
+# 1. バックエンドの環境変数を設定
+cp backend/.env.example backend/.env
+# backend/.env を編集して DB_USER, DB_PASSWORD, DB_NAME, GEMINI_API_KEY を設定
+
+# 2. バックエンド起動（Go + MySQL + phpMyAdmin）
+cd backend
+docker compose up -d
+
+# 3. フロントエンド起動
+cd ../frontend
+npm install
+npm run dev
+```
+
+- フロントエンド: <http://localhost:5173>
+- バックエンド API: <http://localhost:8080>
+- phpMyAdmin: <http://localhost:9090>
+- フロントエンドの Vite dev server が `/api/*` を `localhost:8080` にプロキシするため、フロントエンドからは `/api/solo` 等でアクセスできる
+
+## 本番環境
+
+### 前提条件
+
+- Docker / Docker Compose
+- 外部にリバースプロキシ（nginx 等）が稼働していること
+- リバースプロキシとアプリが同一の Docker ネットワークに参加していること
+
+### 構成
+
+```text
+リバースプロキシ ──▶ frontend (nginx:80)
+                      ├── /         → 静的ファイル配信 (React ビルド成果物)
+                      └── /api/*    → app (Go:8080) にプロキシ
+                                        └── db (MySQL:3306)
+```
+
+### 起動手順
+
+```bash
+# 1. 環境変数ファイルを作成
+cp .env.prod.example .env.prod
+# .env.prod を編集
+
+# 2. ビルド & 起動
+docker compose -f compose.prod.yml --env-file .env.prod up --build -d
+
+# 3. 停止
+docker compose -f compose.prod.yml down
+```
+
+### 本番用ファイル一覧
+
+| ファイル                   | 役割                                  |
+| -------------------------- | ------------------------------------- |
+| `compose.prod.yml`         | 本番用 Docker Compose                 |
+| `backend/Dockerfile.prod`  | Go マルチステージビルド               |
+| `frontend/Dockerfile.prod` | React ビルド + nginx 配信             |
+| `frontend/default.conf`    | nginx 設定（静的配信 + API プロキシ） |
+| `.env.prod.example`        | 環境変数テンプレート                  |
 
 ---
 
@@ -235,12 +321,12 @@
 ## プロダクト説明
 -->
 
-<!-- 開発したプロダクトの説明を入力してください 
+<!-- 開発したプロダクトの説明を入力してください
 
 ## 操作説明・デモ動画
 -->
 
-<!-- 開発したプロダクトの操作説明について入力してください。また、操作説明デモ動画があれば、埋め込みやリンクを記載してください 
+<!-- 開発したプロダクトの操作説明について入力してください。また、操作説明デモ動画があれば、埋め込みやリンクを記載してください
 
 ## 注力したポイント
 -->
@@ -257,7 +343,7 @@
 
 -->
 
-<!-- 使用技術を入力してください 
+<!-- 使用技術を入力してください
 
 ### AWS構成図
 <img width="686" height="435" alt="image" src="https://github.com/user-attachments/assets/f7286ff6-ac04-488c-9a17-c0975677ab8e" />

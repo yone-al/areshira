@@ -1,0 +1,65 @@
+services:
+  db:
+    image: mysql:8.4
+    container_name: mysql
+    environment:
+      TZ: Asia/Tokyo
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+    volumes:
+      - db-data:/var/lib/mysql
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "mysqladmin ping -h 127.0.0.1 -u root -p$$DB_PASSWORD --silent",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    # ポートを外部に公開しない（コンテナ間通信のみ）
+    expose:
+      - "3306"
+    restart: unless-stopped
+
+  app:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.prod
+    container_name: go-app
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      GIN_MODE: release
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      DB_HOST: db
+      DB_PORT: "3306"
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+    # ポートを外部に公開しない（nginx経由でのみアクセス）
+    expose:
+      - "8080"
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+    container_name: frontend
+    depends_on:
+      - app
+    expose:
+      - "80"
+    networks:
+      - default
+      - areshira
+    restart: unless-stopped
+
+volumes:
+  db-data:
+
+networks:
+  areshira:
+    external: true
