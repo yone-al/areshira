@@ -82,7 +82,7 @@ function Board() {
 
 	// ローディング中の表示
 	if (isLoading) {
-		return <div className="loading-container">読み込み中...</div>;
+		return <div className="board-loading">読み込み中...</div>;
 	}
 
 	if (fetchError) {
@@ -94,7 +94,7 @@ function Board() {
 	return (
 		<div className="board-page-container">
 			{/* チャット形式のメッセージ表示エリア */}
-			<div className="messages-area board-message-wrapper">
+			<div className="board-messages">
 				{hints.map((hint, index) => (
 					<MessageBubble
 						// biome-ignore lint/suspicious/noArrayIndexKey: ヒントは並び替えないので index をキーにしてよい
