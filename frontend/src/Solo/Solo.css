@@ -210,24 +210,25 @@
 	}
 }
 
-/* 物語の続きを見る（クリックできる仕切り） - 閉じるボタンと見た目を統一 */
-.show-story-trigger {
+/* 「物語の続きを見る／閉じる」の区切り線ボタン */
+.story-toggle {
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	margin: 32px 0;
-	cursor: pointer;
-	position: relative;
-	transition: all 0.2s ease;
 	width: 100%;
+	transition: all 0.2s ease;
+	/* button 要素はページの書体を受け継がないため、明示的に受け継ぐ */
+	font: inherit;
+	letter-spacing: inherit;
 }
 
-.show-story-trigger:hover {
+.story-toggle:hover {
 	transform: translateY(-2px);
 }
 
-.show-story-trigger::before,
-.show-story-trigger::after {
+.story-toggle::before,
+.story-toggle::after {
 	content: "";
 	flex: 1;
 	height: 1px;
@@ -235,7 +236,7 @@
 	opacity: 0.6;
 }
 
-.show-story-trigger span {
+.story-toggle span {
 	padding: 6px 16px;
 	background-color: #ebf5ff;
 	border: 1px solid #bbdefb;
@@ -244,56 +245,20 @@
 	font-size: 12px;
 	font-weight: bold;
 	transition: all 0.2s ease;
-	z-index: 1;
-	margin: 0 15px;
-	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.show-story-trigger:hover span {
-	background-color: #e3f2fd;
-	border-color: #2196f3;
-}
-
-/* 物語の続き開始の区切り線 */
-.story-start-divider {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	margin: 32px 0;
-	width: 100%;
-	cursor: pointer;
-	transition: all 0.2s ease;
-}
-
-.story-start-divider:hover {
-	transform: translateY(-2px);
-}
-
-.story-start-divider:hover span {
-	background-color: #e3f2fd;
-	border-color: #2196f3;
-}
-
-.story-start-divider::before,
-.story-start-divider::after {
-	content: "";
-	flex: 1;
-	height: 1px;
-	background: linear-gradient(to right, transparent, #2196f3, transparent);
-	opacity: 0.6;
-}
-
-.story-start-divider span {
-	padding: 6px 16px;
-	background-color: #ebf5ff;
-	border: 1px solid #bbdefb;
-	color: #1976d2;
-	border-radius: 12px;
-	font-size: 12px;
-	font-weight: bold;
 	margin: 0 15px;
 	white-space: nowrap;
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.story-toggle:hover span {
+	background-color: #e3f2fd;
+	border-color: #2196f3;
+}
+
+/* キーボードで選んだときだけ、枠線でフォーカスを示す */
+.story-toggle.Mui-focusVisible span {
+	outline: 2px solid #1976d2;
+	outline-offset: 2px;
 }
 
 /* --- ギブアップ（チャットバブル風ボタン） --- */

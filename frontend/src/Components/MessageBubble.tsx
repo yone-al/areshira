@@ -21,7 +21,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
 			src.split("/").pop()?.split(".")[0]?.toLowerCase() || "";
 		return (
 			<div className={`icon ${iconClassName}`}>
-				<img src={src} alt="icon" className={`icon-img ${iconClassName}`} />
+				<img src={src} alt="" className={`icon-img ${iconClassName}`} />
 			</div>
 		);
 	};

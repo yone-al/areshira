@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ButtonBase from "@mui/material/ButtonBase";
 import ResultButtons from "../Result/Components/ResultButtons";
 import ResultOverlay from "../Result/Components/ResultOverlay";
 import ShareModal from "../Result/Components/ShareModal";
@@ -362,7 +363,7 @@ function Solo() {
 		return (
 			<div className="loading-container">
 				<div className="loading-icon-container">
-					<img src={OSAKA_ICON} alt="Osaka Icon" className="loading-icon-img" />
+					<img src={OSAKA_ICON} alt="" className="loading-icon-img" />
 				</div>
 				<div className="loading-text-container">
 					<div className="loading-text">
@@ -402,27 +403,23 @@ function Solo() {
 				{messages.map((msg, index) => (
 					<React.Fragment key={msg.messageId}>
 						{msg.isDivider ? (
-							<div
-								className="story-start-divider"
+							<ButtonBase
+								className="story-toggle"
 								onClick={handleHideStory}
-								onKeyDown={(e) => e.key === "Enter" && handleHideStory()}
-								tabIndex={0}
-								role="button"
+								disableRipple
 							>
 								<span>物語の続きを閉じる ▲</span>
-							</div>
+							</ButtonBase>
 						) : (
 							<>
 								{pendingHints.length > 0 && index === storyInsertIndex && (
-									<div
-										className="show-story-trigger"
+									<ButtonBase
+										className="story-toggle"
 										onClick={handleShowStory}
-										onKeyDown={(e) => e.key === "Enter" && handleShowStory()}
-										tabIndex={0}
-										role="button"
+										disableRipple
 									>
 										<span>物語の続きを見る ▼</span>
-									</div>
+									</ButtonBase>
 								)}
 								<MessageBubble text={msg.hint} isUser={msg.isUser} icon={msg.icon} />
 							</>
@@ -436,7 +433,7 @@ function Solo() {
 						className="giveup-chat-bubble"
 						onClick={handleGiveUp}
 					>
-						<img src={KYOTO_ICON} alt="icon" className="giveup-icon-img" />
+						<img src={KYOTO_ICON} alt="" className="giveup-icon-img" />
 						<span className="giveup-chat-text">答えを見る？</span>
 					</button>
 				)}
