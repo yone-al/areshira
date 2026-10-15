@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -46,9 +46,14 @@ function BoardList() {
 	const [isLoading, setIsLoading] = useState(true);
 	// エラー状態
 	const [fetchError, setFetchError] = useState(false);
+	// StrictModeでの二重フェッチ防止
+	const hasFetchedRef = useRef(false);
 
 	// ページ表示時にAPIからデータを取得する
 	useEffect(() => {
+		if (hasFetchedRef.current) return;
+		hasFetchedRef.current = true;
+
 		const fetchRounds = async () => {
 			try {
 				const response = await fetch("/api/solo/bookmark/all");
