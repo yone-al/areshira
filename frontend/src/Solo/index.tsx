@@ -327,43 +327,34 @@ function Solo() {
 		}
 	};
 
-	const handleShowStory = () => {
-		setMessages((prev) => {
-			const newMessages = [...prev];
-			const divider = {
-				messageId: Date.now() + 999,
-				hint: "DIVIDER",
-				isUser: false,
-				isDivider: true,
-			};
+	// 物語の続き（正解までに出なかったヒント）は、最後の「回答」と「判定」の2件の手前に入れる
+	const storyInsertIndex = messages.length - 2;
 
-			if (newMessages.length >= 2) {
-				newMessages.splice(newMessages.length - 2, 0, divider, ...pendingHints);
-			} else {
-				newMessages.push(divider, ...pendingHints);
-			}
-			return newMessages;
-		});
+	const handleShowStory = () => {
+		const divider = {
+			messageId: Date.now() + 999,
+			hint: "DIVIDER",
+			isUser: false,
+			isDivider: true,
+		};
+		setMessages([
+			...messages.slice(0, storyInsertIndex),
+			divider,
+			...pendingHints,
+			...messages.slice(storyInsertIndex),
+		]);
 		setPendingHints([]);
 	};
 
 	const handleHideStory = () => {
-		setMessages((prev) => {
-			const dividerIndex = prev.findIndex((m) => m.isDivider);
-			if (dividerIndex === -1) return prev;
+		const dividerIndex = messages.findIndex((m) => m.isDivider);
+		if (dividerIndex === -1) return;
 
-			const newMessages = [...prev];
-			// Extractstory hints to put back in pendingHints
-			const storyHints = newMessages.slice(
-				dividerIndex + 1,
-				newMessages.length - 2,
-			);
-			setPendingHints(storyHints);
-
-			// Remove divider and the hints
-			newMessages.splice(dividerIndex, storyHints.length + 1);
-			return newMessages;
-		});
+		setPendingHints(messages.slice(dividerIndex + 1, storyInsertIndex));
+		setMessages([
+			...messages.slice(0, dividerIndex),
+			...messages.slice(storyInsertIndex),
+		]);
 	};
 
 	if (isLoading) {
@@ -442,7 +433,7 @@ function Solo() {
 							</div>
 						) : (
 							<>
-								{pendingHints.length > 0 && index === messages.length - 2 && (
+								{pendingHints.length > 0 && index === storyInsertIndex && (
 									<div
 										className="show-story-trigger"
 										onClick={handleShowStory}
