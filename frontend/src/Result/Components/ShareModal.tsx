@@ -51,8 +51,6 @@ export default function ShareModal({ gameId, onClose }: Props) {
 					sx={{
 						backgroundColor: "#000",
 						color: "#fff",
-						fontWeight: "bold",
-						textTransform: "none",
 						borderRadius: "9999px",
 						paddingX: 3,
 						"&:hover": {

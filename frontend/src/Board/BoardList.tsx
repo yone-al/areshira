@@ -100,11 +100,7 @@ function BoardList() {
 		return (
 			<div className="board-list-empty">
 				<p>まだラウンドがありません</p>
-				<Button
-					variant="contained"
-					onClick={() => navigate("/")}
-					className="board-list-back-button"
-				>
+				<Button variant="contained" onClick={() => navigate("/")}>
 					タイトルに戻る
 				</Button>
 			</div>

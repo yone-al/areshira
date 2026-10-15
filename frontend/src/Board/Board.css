@@ -46,37 +46,19 @@
 
 /* Material Design Color Tokens */
 :root {
-	--md-primary: #1a73e8;
-	/* Google Blue */
-	--md-on-primary: #ffffff;
 	--md-surface: #ffffff;
 	--md-outline: #dadce0;
-	--md-text-secondary: #5f6368;
-	--md-error: #d93025;
 }
 
 /* --- アイコンと文字が縦に並んだ四角いボタン --- */
 .square-icon-button {
-	display: flex !important;
-	flex-direction: column !important;
-	align-items: center;
-	justify-content: center;
-	width: 110px !important;
-	height: 80px !important;
-	gap: 4px !important;
-	font-size: 0.85rem !important;
-	padding: 8px !important;
-	border-radius: 8px !important;
-	background-color: white !important;
-	color: #ed6c02 !important;
-	border: 1px solid #ed6c02 !important;
-	font-weight: bold !important;
-	text-transform: none !important;
-}
-
-.square-icon-button:hover {
-	background-color: rgba(237, 108, 2, 0.04) !important;
-	border-color: #e65100 !important;
+	display: flex;
+	flex-direction: column;
+	width: 110px;
+	height: 80px;
+	gap: 4px;
+	font-size: 0.85rem;
+	padding: 8px;
 }
 
 /* 解答エリア：クリーンなサーフェス */
@@ -97,12 +79,6 @@
 	z-index: 100;
 }
 
-.square-icon-button.visible {
-	background-color: white !important;
-	color: var(--md-error) !important;
-	border-color: var(--md-error) !important;
-}
-
 /* 答えのテキストが長い場合に折り返せるようにする */
 .square-icon-button span {
 	text-align: center;
@@ -113,15 +89,9 @@
 	font-size: 0.8rem;
 }
 
-/* 答えを確認ボタン：未確認時は目立たせるために塗りつぶしスタイルに */
+/* 答えを確認ボタン：未確認時は塗りつぶし（contained）にし、オレンジの影で目立たせる */
 .square-icon-button.answer-toggle-btn:not(.visible) {
-	background-color: #ed6c02 !important;
-	color: white !important;
 	box-shadow: 0 4px 14px 0 rgba(237, 108, 2, 0.39);
-}
-
-.square-icon-button.answer-toggle-btn:not(.visible):hover {
-	background-color: #e65100 !important;
 }
 
 /* スマホ向けの微調整 */
@@ -142,14 +112,13 @@
 	}
 
 	.square-icon-button {
-		height: 80px !important;
-		font-size: 0.75rem !important;
-		padding: 6px !important;
+		font-size: 0.75rem;
+		padding: 6px;
 	}
 }
 
 @media (max-width: 599px) {
 	.square-icon-button {
-		width: 100px !important;
+		width: 100px;
 	}
 }

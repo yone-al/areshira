@@ -35,15 +35,15 @@
 
 /* カード内の×ボタン */
 .result-card-close {
-	position: absolute !important;
+	position: absolute;
 	top: 8px;
 	left: 8px;
-	color: #888 !important;
+	color: #888;
 }
 
 .result-card-close:hover {
-	background-color: #f0f0f0 !important;
-	color: #333 !important;
+	background-color: #f0f0f0;
+	color: #333;
 }
 
 /* 「正解」の文字スタイル */
@@ -89,7 +89,7 @@
 }
 
 .share-modal-close {
-	position: absolute !important;
+	position: absolute;
 	top: 8px;
 	left: 8px;
 }
@@ -116,7 +116,7 @@
 
 /* お気に入り押下時のポップアニメーション */
 .bookmark-pop {
-	animation: bookmark-pop 0.6s ease both !important;
+	animation: bookmark-pop 0.6s ease both;
 }
 
 @keyframes bookmark-pop {

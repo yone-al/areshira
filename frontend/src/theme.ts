@@ -12,9 +12,23 @@ const theme = createTheme({
 	components: {
 		MuiButton: {
 			styleOverrides: {
-				root: { borderRadius: 8 },
-				// MUI 既定の半透明の枠ではなく、文字と同じ色の枠にする
-				outlined: { borderColor: "currentColor" },
+				root: {
+					borderRadius: 8,
+					variants: [
+						// MUI 既定の半透明の枠ではなく、文字と同じ色の枠にする
+						{
+							props: { variant: "outlined" },
+							style: { borderColor: "currentColor" },
+						},
+						// オレンジの枠線ボタンは、ホバー時に枠を濃くする
+						{
+							props: { variant: "outlined", color: "primary" },
+							style: ({ theme }) => ({
+								"&:hover": { borderColor: theme.palette.primary.dark },
+							}),
+						},
+					],
+				},
 			},
 		},
 	},

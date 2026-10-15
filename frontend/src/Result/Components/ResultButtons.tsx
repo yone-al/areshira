@@ -25,24 +25,8 @@ export default function ResultButtons({
 		display: "flex",
 		flexDirection: "column",
 		gap: "4px",
-		fontWeight: "bold",
 		fontSize: "0.85rem",
 		lineHeight: 1.2,
-		textTransform: "none",
-		borderRadius: "8px",
-		borderWidth: "1px",
-		"&:hover": {
-			borderWidth: "1px",
-		},
-	};
-
-	const orangeStyle = {
-		color: "#ed6c02",
-		borderColor: "#ed6c02",
-		"&:hover": {
-			borderColor: "#e65100",
-			backgroundColor: "rgba(237, 108, 2, 0.04)",
-		},
 	};
 
 	const heartStyle = {
@@ -58,11 +42,7 @@ export default function ResultButtons({
 
 	return (
 		<Stack direction="row" spacing={2} justifyContent="center" width="100%">
-			<Button
-				variant="outlined"
-				onClick={onBackToTitle}
-				sx={{ ...baseButtonSx, ...orangeStyle }}
-			>
+			<Button variant="outlined" onClick={onBackToTitle} sx={baseButtonSx}>
 				<ArrowBackIcon fontSize="medium" />
 				<span>
 					タイトル
@@ -98,11 +78,7 @@ export default function ResultButtons({
 				<span>ええやん</span>
 			</Button>
 
-			<Button
-				variant="outlined"
-				onClick={onRetry}
-				sx={{ ...baseButtonSx, ...orangeStyle }}
-			>
+			<Button variant="outlined" onClick={onRetry} sx={baseButtonSx}>
 				<ReplayIcon fontSize="medium" />
 				<span>
 					もう一度

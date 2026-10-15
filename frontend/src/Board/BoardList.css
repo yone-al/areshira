@@ -20,11 +20,8 @@
 }
 
 .board-list-back-link {
-	color: #ed6c02 !important;
-	text-transform: none !important;
-	font-weight: bold !important;
-	min-width: auto !important;
-	padding: 4px 8px !important;
+	min-width: auto;
+	padding: 4px 8px;
 }
 
 .board-list-title {
@@ -157,14 +154,6 @@
 	background-color: #faf7f2;
 	color: #888;
 	font-size: 1.1rem;
-}
-
-.board-list-back-button {
-	background-color: #ed6c02 !important;
-	color: #ffffff !important;
-	text-transform: none !important;
-	font-weight: bold !important;
-	border-radius: 8px !important;
 }
 
 /* --- スマホ対応 --- */

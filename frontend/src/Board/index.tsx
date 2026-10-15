@@ -124,7 +124,8 @@ function Board() {
 
 				{/* 答えの表示/非表示トグルボタン */}
 				<Button
-					variant="outlined"
+					variant={isAnswerVisible ? "outlined" : "contained"}
+					color={isAnswerVisible ? "error" : "primary"}
 					onClick={() => setIsAnswerVisible(!isAnswerVisible)}
 					className={`square-icon-button answer-toggle-btn ${isAnswerVisible ? "visible" : ""}`}
 				>
