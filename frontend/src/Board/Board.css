@@ -20,6 +20,11 @@
 	/* Ensure messages stack from top */
 }
 
+/* 掲示板の詳細ページでは吹き出しを横長にする */
+.board-message-wrapper .message-container {
+	max-width: 95%;
+}
+
 /* Custom scrollbar for messages if needed */
 .messages-area::-webkit-scrollbar {
 	width: 8px;

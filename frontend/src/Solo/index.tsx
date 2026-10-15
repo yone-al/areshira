@@ -4,7 +4,7 @@ import ResultButtons from "../Result/Components/ResultButtons";
 import ResultOverlay from "../Result/Components/ResultOverlay";
 import ShareModal from "../Result/Components/ShareModal";
 import InputArea from "./Components/InputArea";
-import MessageBubble from "./Components/MessageBubble";
+import MessageBubble from "../Components/MessageBubble";
 import Timer from "./Components/Timer";
 import "./Solo.css";
 

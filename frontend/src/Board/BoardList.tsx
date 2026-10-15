@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import MessageBubble from "./Components/MessageBubble";
+import MessageBubble from "../Components/MessageBubble";
 import "./BoardList.css";
 
 // ==========================================
