@@ -5,7 +5,6 @@ import ReplayIcon from "@mui/icons-material/Replay";
 import "../Styles/Result.css";
 
 interface Props {
-	gameId: number;
 	isBookmarked: boolean;
 	isAnimating: boolean;
 	onBackToTitle: () => void;

@@ -53,23 +53,6 @@
 	}
 }
 
-.result-button {
-	padding: 15px 25px;
-	background-color: #2196f3;
-	/* Blue result button */
-	color: white;
-	border: none;
-	border-radius: 8px;
-	font-size: 16px;
-	cursor: pointer;
-	transition: background-color 0.3s;
-	white-space: nowrap;
-}
-
-.result-button:hover {
-	background-color: #0b7dda;
-}
-
 .button-group {
 	display: flex;
 	gap: 10px;

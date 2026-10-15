@@ -11,25 +11,6 @@
 	position: relative;
 }
 
-@media (max-width: 768px) {
-	.board-page-container {
-		padding: 0 5px;
-		/* Minimal horizontal padding */
-	}
-
-	.messages-area {
-		padding-left: 0;
-		/* No extra padding */
-		padding-right: 100px;
-		/* Ensure chat ends before timer starts (approx 84px from right) */
-	}
-}
-
-/* Optional: Add a central content area if a constrained chat width is desired, 
-   but user asked for 'web site' look, so full width or wide container is good. 
-   Let's keep the messages area full width but maybe limit reading width if needed.
-   For now, we'll keep it flexible. */
-
 .messages-area {
 	flex: 1;
 	overflow-y: auto;
@@ -177,16 +158,6 @@
 	background-color: #e65100 !important;
 }
 
-/* ラベル：Material標準のキャプションスタイル */
-.answer-label {
-	font-size: 12px;
-	font-weight: 500;
-	letter-spacing: 0.1px;
-	color: var(--md-text-secondary);
-	margin: 0 0 10px 0;
-	text-align: center;
-}
-
 /* スマホ向けの微調整 */
 @media (max-width: 768px) {
 	.board-page-container {
@@ -210,10 +181,5 @@
 		height: 80px !important;
 		font-size: 0.75rem !important;
 		padding: 6px !important;
-	}
-
-	.answer-label {
-		font-size: 11px;
-		margin-bottom: 2px;
 	}
 }

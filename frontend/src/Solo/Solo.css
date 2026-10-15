@@ -25,11 +25,6 @@
 	}
 }
 
-/* Optional: Add a central content area if a constrained chat width is desired,
-   but user asked for 'web site' look, so full width or wide container is good.
-   Let's keep the messages area full width but maybe limit reading width if needed.
-   For now, we'll keep it flexible. */
-
 .messages-area {
 	flex: 1;
 	overflow-y: auto;

@@ -425,9 +425,8 @@ function Solo() {
 
 	return (
 		<div className="solo-container">
-			{showResultOverlay && gameId !== null && (
+			{showResultOverlay && (
 				<ResultOverlay
-					gameId={gameId}
 					isBookmarked={isBookmarked}
 					isAnimating={isAnimating}
 					onBookmark={handleBookmark}
@@ -494,7 +493,6 @@ function Solo() {
 				) : (
 					<div className="result-buttons-container">
 						<ResultButtons
-							gameId={gameId ?? 0}
 							isBookmarked={isBookmarked}
 							isAnimating={isAnimating}
 							onBackToTitle={handleTitle}

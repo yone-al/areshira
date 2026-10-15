@@ -1,14 +1,11 @@
-import { useState } from "react";
 import "../Styles/Result.css";
 import ResultButtons from "./ResultButtons";
-import ShareModal from "./ShareModal";
 import { useNavigate } from "react-router-dom";
 import ThanksConfetti from "./ThanksConfetti";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 
 interface Props {
-	readonly gameId: number;
 	readonly isBookmarked: boolean;
 	readonly isAnimating: boolean;
 	readonly onBookmark: () => void;
@@ -17,7 +14,6 @@ interface Props {
 }
 
 export default function ResultOverlay({
-	gameId,
 	isBookmarked,
 	isAnimating,
 	onBookmark,
@@ -25,7 +21,6 @@ export default function ResultOverlay({
 	isGivenUp = false,
 }: Props) {
 	const navigate = useNavigate();
-	const [isShareOpen, setIsShareOpen] = useState(false);
 
 	const handleTitle = () => navigate("/");
 	const handleRetry = () => window.location.reload();
@@ -35,7 +30,6 @@ export default function ResultOverlay({
 			className="overlay"
 			onClick={onClose}
 			onKeyDown={(e) => e.key === "Escape" && onClose}
-			// type="button"
 			tabIndex={0}
 		>
 			{!isGivenUp && <ThanksConfetti />}
@@ -61,7 +55,6 @@ export default function ResultOverlay({
 				{!isGivenUp && <h1 className="seikai-text">正解</h1>}
 
 				<ResultButtons
-					gameId={gameId}
 					isBookmarked={isBookmarked}
 					isAnimating={isAnimating}
 					onBackToTitle={handleTitle}
@@ -69,10 +62,6 @@ export default function ResultOverlay({
 					onBookmark={onBookmark}
 				/>
 			</div>
-
-			{isShareOpen && (
-				<ShareModal gameId={gameId} onClose={() => setIsShareOpen(false)} />
-			)}
 		</div>
 	);
 }

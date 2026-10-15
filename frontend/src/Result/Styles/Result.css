@@ -72,15 +72,6 @@
 	border-color: #999 !important;
 }
 
-/* ボタンを包むコンテナ（横並び） */
-.button-container {
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
-	gap: 10px;
-	width: 100%;
-}
-
 /* 「正解」の文字スタイル */
 .seikai-text {
 	font-size: 3rem;
@@ -191,10 +182,6 @@
 		height: 80px !important;
 		font-size: 0.8rem !important;
 		padding: 8px !important;
-	}
-
-	.button-container {
-		gap: 16px;
 	}
 
 	.share-modal {
