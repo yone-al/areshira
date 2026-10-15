@@ -27,6 +27,7 @@
 	justify-content: center;
 	gap: 24px;
 	box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+	/* 紙吹雪の canvas（z-index: 2）より手前にカードを表示する */
 	z-index: 1001;
 }
 
