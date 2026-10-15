@@ -2,6 +2,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import XIcon from "@mui/icons-material/X";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
+import Modal from "@mui/material/Modal";
 import "../Styles/Result.css";
 
 interface Props {
@@ -23,16 +24,10 @@ export default function ShareModal({ gameId, onClose }: Props) {
 	};
 
 	return (
-		<div
-			className="share-modal-backdrop"
-			onClick={onClose}
-			onKeyDown={(e) => e.key === "Escape" && onClose()}
-			role="presentation"
-		>
+		// 背景クリックと Escape キーで閉じる処理は Modal に任せる
+		<Modal open onClose={onClose} className="centered-modal">
 			<div
 				className="share-modal"
-				onClick={(e) => e.stopPropagation()}
-				onKeyDown={(e) => e.stopPropagation()}
 				role="dialog"
 				aria-label="シェアプレビュー"
 				tabIndex={-1}
@@ -61,6 +56,6 @@ export default function ShareModal({ gameId, onClose }: Props) {
 					Xにポスト
 				</Button>
 			</div>
-		</div>
+		</Modal>
 	);
 }

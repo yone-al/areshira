@@ -3,6 +3,7 @@ import ResultButtons from "./ResultButtons";
 import { useNavigate } from "react-router-dom";
 import ThanksConfetti from "./ThanksConfetti";
 import IconButton from "@mui/material/IconButton";
+import Modal from "@mui/material/Modal";
 import CloseIcon from "@mui/icons-material/Close";
 
 interface Props {
@@ -26,42 +27,32 @@ export default function ResultOverlay({
 	const handleRetry = () => window.location.reload();
 
 	return (
-		<div
-			className="overlay"
-			onClick={onClose}
-			onKeyDown={(e) => e.key === "Escape" && onClose}
-			tabIndex={0}
+		// 背景クリックと Escape キーで閉じる処理は Modal に任せる
+		<Modal
+			open
+			onClose={onClose}
+			className="centered-modal"
+			slotProps={{ backdrop: { sx: { backgroundColor: "rgba(0, 0, 0, 0.4)" } } }}
 		>
-			{!isGivenUp && <ThanksConfetti />}
+			<div className="result-modal" role="dialog" aria-label="結果" tabIndex={-1}>
+				{!isGivenUp && <ThanksConfetti />}
 
-			<div
-				className="result-card"
-				onClick={(e) => e.stopPropagation()}
-				onKeyDown={(e) => e.stopPropagation()}
-				role="dialog"
-				tabIndex={-1}
-			>
-				<IconButton
-					className="result-card-close"
-					onClick={(e) => {
-						e.stopPropagation();
-						if (onClose) onClose();
-					}}
-					size="small"
-				>
-					<CloseIcon />
-				</IconButton>
+				<div className="result-card">
+					<IconButton className="result-card-close" onClick={onClose} size="small">
+						<CloseIcon />
+					</IconButton>
 
-				{!isGivenUp && <h1 className="seikai-text">正解</h1>}
+					{!isGivenUp && <h1 className="seikai-text">正解</h1>}
 
-				<ResultButtons
-					isBookmarked={isBookmarked}
-					isAnimating={isAnimating}
-					onBackToTitle={handleTitle}
-					onRetry={handleRetry}
-					onBookmark={onBookmark}
-				/>
+					<ResultButtons
+						isBookmarked={isBookmarked}
+						isAnimating={isAnimating}
+						onBackToTitle={handleTitle}
+						onRetry={handleRetry}
+						onBookmark={onBookmark}
+					/>
+				</div>
 			</div>
-		</div>
+		</Modal>
 	);
 }

@@ -1,17 +1,14 @@
-/* 画面全体を覆うグレー半透明の背景 */
-.overlay {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100vw;
-	height: 100vh;
-	background-color: rgba(0, 0, 0, 0.4);
+/* MUI の Modal の中身を画面の中央に置く */
+.centered-modal {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	z-index: 1000;
-	border: none;
-	cursor: default;
+}
+
+/* Modal が開いたときにフォーカスする外枠。フォーカスの枠線は出さない */
+.result-modal,
+.share-modal {
+	outline: none;
 }
 
 /* --- 結果カード --- */
@@ -60,19 +57,6 @@
 }
 
 /* --- シェアモーダル --- */
-.share-modal-backdrop {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100vw;
-	height: 100vh;
-	background-color: rgba(0, 0, 0, 0.5);
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	z-index: 2000;
-}
-
 .share-modal {
 	position: relative;
 	background: #fff;
