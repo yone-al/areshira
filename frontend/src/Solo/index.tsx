@@ -62,6 +62,7 @@ function Solo() {
 	const isAtBottomRef = useRef(true);
 	const hasFetchedData = useRef(false);
 	const giveUpTimerRef = useRef<number | null>(null);
+	const isGivingUpRef = useRef(false);
 
 	useEffect(() => {
 		if (hasFetchedData.current) return;
@@ -226,7 +227,9 @@ function Solo() {
 
 	// ギブアップ処理：正解を取得してチャットに表示する
 	const handleGiveUp = async () => {
-		if (gameId === null) return;
+		// 正解を表示するまでの間に、もう一度押されても無視する
+		if (gameId === null || isGivingUpRef.current) return;
+		isGivingUpRef.current = true;
 
 		try {
 			const res = await fetch(`/api/solo/${gameId}/answer`);
@@ -264,6 +267,7 @@ function Solo() {
 			}, 500);
 		} catch (error) {
 			console.error("正解の取得に失敗しました:", error);
+			isGivingUpRef.current = false;
 			setMessages((prev) => [
 				...prev,
 				{
@@ -289,25 +293,23 @@ function Solo() {
 	const handleRetry = () => window.location.reload();
 	const handleShare = () => setIsShareOpen(true);
 	const handleBookmark = async () => {
-		if (!isBookmarked) {
-			setIsAnimating(true);
-			setIsBookmarked(true);
-			const postBookmark = async () => {
-				try {
-					const res = await fetch(`/api/solo/${gameId ?? 0}/bookmark`, {
-						method: "POST",
-					});
-					if (!res.ok) throw new Error("通信エラー");
-				} catch (e) {
-					console.error("ブックマーク登録に失敗しました:", e);
-					setIsBookmarked(false);
-				}
-			};
-			setTimeout(() => {
-				setIsAnimating(false);
-				postBookmark();
-				handleShare();
-			}, 2000);
+		if (isBookmarked || gameId === null) return;
+		setIsAnimating(true);
+		setIsBookmarked(true);
+		// 茶しばきのアニメーションが終わってからシェア画面を開く
+		setTimeout(() => {
+			setIsAnimating(false);
+			handleShare();
+		}, 2000);
+
+		try {
+			const res = await fetch(`/api/solo/${gameId}/bookmark`, {
+				method: "POST",
+			});
+			if (!res.ok) throw new Error("通信エラー");
+		} catch (e) {
+			console.error("ブックマーク登録に失敗しました:", e);
+			setIsBookmarked(false);
 		}
 	};
 
