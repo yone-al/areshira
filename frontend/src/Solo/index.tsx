@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ResultButtons from "../Result/Components/ResultButtons";
 import ResultOverlay from "../Result/Components/ResultOverlay";
@@ -21,6 +21,8 @@ type MessageItem = {
 function Solo() {
 	const [messages, setMessages] = useState<MessageItem[]>([]);
 	const [hints, setHints] = useState<string[]>([]);
+	// チャットに表示し終えたヒントの数
+	const [shownHintCount, setShownHintCount] = useState(0);
 	const [gameId, setGameId] = useState<number | null>(null);
 	const [inputValue, setInputValue] = useState("");
 
@@ -81,6 +83,7 @@ function Solo() {
 								icon: HINT_ICONS[0],
 							},
 						]);
+						setShownHintCount(1);
 					}
 				}
 			} catch (e) {
@@ -136,6 +139,7 @@ function Solo() {
 						icon: HINT_ICONS[i % HINT_ICONS.length],
 					},
 				]);
+				setShownHintCount(i + 1);
 
 				if (i < hints.length - 1) {
 					setTimeLeft(11); // Reset timer
@@ -211,18 +215,7 @@ function Solo() {
 		}
 	};
 
-	// 全ヒントが表示されたかどうかを判定する
-	const allHintsShown = useMemo(() => {
-		const shownHintCount = messages.filter(
-			(m) =>
-				!m.isUser &&
-				!m.isDivider &&
-				m.hint !== "正解やで！" &&
-				m.hint !== "不正解どす..." &&
-				!m.hint.startsWith("正解は「"),
-		).length;
-		return hints.length > 0 && shownHintCount >= hints.length;
-	}, [messages, hints]);
+	const allHintsShown = hints.length > 0 && shownHintCount >= hints.length;
 
 	// ギブアップ処理：正解を取得してチャットに表示する
 	const handleGiveUp = async () => {
@@ -314,17 +307,12 @@ function Solo() {
 	const handleCloseResult = () => {
 		setShowResultOverlay(false);
 
-		const shownHints = messages.filter(
-			(m) => !m.isUser && m.hint !== "正解やで！" && m.hint !== "不正解どす...",
-		);
-		const shownCount = shownHints.length;
-
-		if (shownCount < hints.length) {
-			const remaining = hints.slice(shownCount).map((hint, index) => ({
+		if (shownHintCount < hints.length) {
+			const remaining = hints.slice(shownHintCount).map((hint, index) => ({
 				messageId: Date.now() + 1000 + index,
 				hint: hint,
 				isUser: false,
-				icon: HINT_ICONS[(shownCount + index) % HINT_ICONS.length],
+				icon: HINT_ICONS[(shownHintCount + index) % HINT_ICONS.length],
 			}));
 			setPendingHints(remaining);
 		}
