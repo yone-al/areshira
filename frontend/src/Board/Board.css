@@ -48,41 +48,6 @@
 	gap: 12px;
 }
 
-.error-icon-container {
-	width: 80px;
-	height: 80px;
-	border-radius: 50%;
-	overflow: hidden;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	background: #ffffff;
-	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-	border: 3px solid #fff;
-	margin-bottom: 8px;
-}
-
-.error-icon-container img {
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
-	transform: scale(1.7);
-}
-
-.error-message {
-	font-size: 16px;
-	font-weight: 600;
-	color: #666;
-	margin: 0;
-}
-
-.error-actions {
-	display: flex;
-	flex-direction: column;
-	gap: 8px;
-	margin-top: 8px;
-}
-
 /* Material Design Color Tokens */
 :root {
 	--md-primary: #1a73e8;

@@ -1,0 +1,33 @@
+.error-screen {
+	min-height: 100dvh;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 12px;
+	background-color: #f5f5f5;
+}
+
+.error-screen-icon {
+	width: 80px;
+	height: 80px;
+	border-radius: 50%;
+	overflow: hidden;
+	background: #ffffff;
+	border: 3px solid #fff;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.error-screen-icon img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transform: scale(1.7);
+}
+
+.error-screen-message {
+	margin: 0;
+	font-size: 16px;
+	font-weight: 600;
+	color: #666;
+}

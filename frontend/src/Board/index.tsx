@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "./Board.css";
+import ErrorScreen from "../Components/ErrorScreen";
 import MessageBubble from "../Components/MessageBubble";
 import Button from "@mui/material/Button";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -86,45 +87,7 @@ function Board() {
 
 	if (fetchError) {
 		return (
-			<div className="loading-container">
-				<div className="error-icon-container">
-					<img src="/Image/Kyoto.jpg" alt="Error" />
-				</div>
-				<p className="error-message">データの読み込みに失敗しました</p>
-				<div className="error-actions">
-					<Button
-						variant="contained"
-						onClick={() => window.location.reload()}
-						style={{
-							width: "200px",
-							padding: "10px 20px",
-							borderRadius: "8px",
-							backgroundColor: "#ed6c02",
-							color: "#ffffff",
-							fontWeight: "bold",
-							textTransform: "none",
-						}}
-					>
-						もう一度試す
-					</Button>
-					<Button
-						variant="outlined"
-						onClick={() => navigate("/board")}
-						style={{
-							width: "200px",
-							padding: "10px 20px",
-							borderRadius: "8px",
-							borderColor: "#ed6c02",
-							color: "#ed6c02",
-							backgroundColor: "#ffffff",
-							fontWeight: "bold",
-							textTransform: "none",
-						}}
-					>
-						一覧に戻る
-					</Button>
-				</div>
-			</div>
+			<ErrorScreen backLabel="一覧に戻る" onBack={() => navigate("/board")} />
 		);
 	}
 

@@ -4,6 +4,7 @@ import ResultButtons from "../Result/Components/ResultButtons";
 import ResultOverlay from "../Result/Components/ResultOverlay";
 import ShareModal from "../Result/Components/ShareModal";
 import InputArea from "./Components/InputArea";
+import ErrorScreen from "../Components/ErrorScreen";
 import MessageBubble from "../Components/MessageBubble";
 import Timer from "./Components/Timer";
 import "./Solo.css";
@@ -378,28 +379,7 @@ function Solo() {
 
 	if (fetchError) {
 		return (
-			<div className="loading-container">
-				<div className="loading-icon-container">
-					<img src={KYOTO_ICON} alt="Error Icon" className="loading-icon-img" />
-				</div>
-				<div className="loading-progress-text">読み込みに失敗しました</div>
-				<div className="error-actions">
-					<button
-						type="button"
-						className="error-button-primary"
-						onClick={() => window.location.reload()}
-					>
-						もう一度試す
-					</button>
-					<button
-						type="button"
-						className="error-button-outlined"
-						onClick={() => navigate("/")}
-					>
-						タイトルに戻る
-					</button>
-				</div>
-			</div>
+			<ErrorScreen backLabel="タイトルに戻る" onBack={() => navigate("/")} />
 		);
 	}
 
