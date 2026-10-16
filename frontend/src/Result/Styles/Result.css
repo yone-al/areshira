@@ -1,17 +1,14 @@
-/* 画面全体を覆うグレー半透明の背景 */
-.overlay {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100vw;
-	height: 100vh;
-	background-color: rgba(0, 0, 0, 0.4);
+/* MUI の Modal の中身を画面の中央に置く */
+.centered-modal {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	z-index: 1000;
-	border: none;
-	cursor: default;
+}
+
+/* Modal が開いたときにフォーカスする外枠。フォーカスの枠線は出さない */
+.result-modal,
+.share-modal {
+	outline: none;
 }
 
 /* --- 結果カード --- */
@@ -30,55 +27,21 @@
 	justify-content: center;
 	gap: 24px;
 	box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+	/* 紙吹雪の canvas（z-index: 2）より手前にカードを表示する */
 	z-index: 1001;
 }
 
 /* カード内の×ボタン */
 .result-card-close {
-	position: absolute !important;
+	position: absolute;
 	top: 8px;
 	left: 8px;
-	color: #888 !important;
+	color: #888;
 }
 
 .result-card-close:hover {
-	background-color: #f0f0f0 !important;
-	color: #333 !important;
-}
-
-/* --- アイコンと文字が縦に並んだ四角いボタン --- */
-.square-icon-button {
-	display: flex !important;
-	flex-direction: column !important;
-	align-items: center;
-	justify-content: center;
-	flex: 1 1 0;
-	min-width: 0;
-	max-width: 100px;
-	height: 72px !important;
-	gap: 4px !important;
-	font-size: 0.7rem !important;
-	padding: 8px 4px !important;
-	border-radius: 8px !important;
-	background-color: white !important;
-	color: #333 !important;
-	border: 1px solid #ccc !important;
-	font-weight: bold !important;
-	text-transform: none !important;
-}
-
-.square-icon-button:hover {
-	background-color: #f5f5f5 !important;
-	border-color: #999 !important;
-}
-
-/* ボタンを包むコンテナ（横並び） */
-.button-container {
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
-	gap: 10px;
-	width: 100%;
+	background-color: #f0f0f0;
+	color: #333;
 }
 
 /* 「正解」の文字スタイル */
@@ -86,6 +49,7 @@
 	font-size: 3rem;
 	color: #ff4757;
 	margin: 0;
+	line-height: 1.1;
 	text-shadow:
 		3px 3px 0px #fff,
 		5px 5px 0px rgba(0, 0, 0, 0.15);
@@ -94,19 +58,6 @@
 }
 
 /* --- シェアモーダル --- */
-.share-modal-backdrop {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100vw;
-	height: 100vh;
-	background-color: rgba(0, 0, 0, 0.5);
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	z-index: 2000;
-}
-
 .share-modal {
 	position: relative;
 	background: #fff;
@@ -123,7 +74,7 @@
 }
 
 .share-modal-close {
-	position: absolute !important;
+	position: absolute;
 	top: 8px;
 	left: 8px;
 }
@@ -148,34 +99,9 @@
 	white-space: pre-line;
 }
 
-/* --- お気に入りボタン --- */
-.bookmark-button {
-	position: absolute !important;
-	top: 8px;
-	right: 8px;
-	transition: transform 0.2s ease !important;
-}
-
-.bookmark-button:hover {
-	transform: scale(1.15);
-}
-
-.bookmark-icon-outline {
-	color: #ccc;
-	transition: color 0.2s ease;
-}
-
-.bookmark-button:hover .bookmark-icon-outline {
-	color: #ff6b81;
-}
-
-.bookmark-icon-filled {
-	color: #ff4757;
-}
-
 /* お気に入り押下時のポップアニメーション */
 .bookmark-pop {
-	animation: bookmark-pop 0.6s ease both !important;
+	animation: bookmark-pop 0.6s ease both;
 }
 
 @keyframes bookmark-pop {
@@ -209,17 +135,6 @@
 
 	.seikai-text {
 		font-size: 4.5rem;
-	}
-
-	.square-icon-button {
-		max-width: 110px;
-		height: 80px !important;
-		font-size: 0.8rem !important;
-		padding: 8px !important;
-	}
-
-	.button-container {
-		gap: 16px;
 	}
 
 	.share-modal {

@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import MessageBubble from "./Components/MessageBubble";
+import ErrorScreen from "../Components/ErrorScreen";
+import MessageBubble from "../Components/MessageBubble";
 import "./BoardList.css";
 
 // ==========================================
@@ -45,9 +46,14 @@ function BoardList() {
 	const [isLoading, setIsLoading] = useState(true);
 	// エラー状態
 	const [fetchError, setFetchError] = useState(false);
+	// StrictModeでの二重フェッチ防止
+	const hasFetchedRef = useRef(false);
 
 	// ページ表示時にAPIからデータを取得する
 	useEffect(() => {
+		if (hasFetchedRef.current) return;
+		hasFetchedRef.current = true;
+
 		const fetchRounds = async () => {
 			try {
 				const response = await fetch("/api/solo/bookmark/all");
@@ -90,28 +96,7 @@ function BoardList() {
 	// エラー時の表示
 	if (fetchError) {
 		return (
-			<div className="board-list-empty">
-				<div className="error-icon-container">
-					<img src="/Image/Kyoto.jpg" alt="Error" />
-				</div>
-				<p className="error-message">データの読み込みに失敗しました</p>
-				<div className="error-actions">
-					<Button
-						variant="contained"
-						onClick={() => window.location.reload()}
-						className="board-list-back-button"
-					>
-						もう一度試す
-					</Button>
-					<Button
-						variant="outlined"
-						onClick={() => navigate("/")}
-						className="board-list-back-button-outlined"
-					>
-						タイトルに戻る
-					</Button>
-				</div>
-			</div>
+			<ErrorScreen backLabel="タイトルに戻る" onBack={() => navigate("/")} />
 		);
 	}
 
@@ -120,11 +105,7 @@ function BoardList() {
 		return (
 			<div className="board-list-empty">
 				<p>まだラウンドがありません</p>
-				<Button
-					variant="contained"
-					onClick={() => navigate("/")}
-					className="board-list-back-button"
-				>
+				<Button variant="contained" onClick={() => navigate("/")}>
 					タイトルに戻る
 				</Button>
 			</div>

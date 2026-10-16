@@ -12,8 +12,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
 	isUser,
 	icon,
 }) => {
-	const DEFAULT_ICON_URL =
-		"https://knsoza1.com/wp-content/uploads/2025/02/4cbc0aab7c6d44a4559d83b2d733d166.png";
+	const DEFAULT_ICON_URL = "/Image/Kyoto.jpg";
 
 	const renderIcon = () => {
 		const src = icon || DEFAULT_ICON_URL;
@@ -22,7 +21,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
 			src.split("/").pop()?.split(".")[0]?.toLowerCase() || "";
 		return (
 			<div className={`icon ${iconClassName}`}>
-				<img src={src} alt="icon" className={`icon-img ${iconClassName}`} />
+				<img src={src} alt="" className={`icon-img ${iconClassName}`} />
 			</div>
 		);
 	};

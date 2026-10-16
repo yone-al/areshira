@@ -26,6 +26,7 @@ function App() {
 				<div className="title-button-group">
 					<Button
 						variant="contained"
+						disableElevation
 						onClick={() => navigate("/solo")}
 						className="title-base-button btn-start"
 					>

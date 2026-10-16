@@ -28,6 +28,7 @@ const InputArea: React.FC<InputAreaProps> = ({
 			<input
 				type="text"
 				className="input-field"
+				aria-label="回答"
 				value={value}
 				onChange={(e) => onChange(e.target.value)}
 				onKeyDown={handleKeyDown}

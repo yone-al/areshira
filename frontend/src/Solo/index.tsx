@@ -1,14 +1,34 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ButtonBase from "@mui/material/ButtonBase";
 import ResultButtons from "../Result/Components/ResultButtons";
 import ResultOverlay from "../Result/Components/ResultOverlay";
 import ShareModal from "../Result/Components/ShareModal";
 import InputArea from "./Components/InputArea";
-import MessageBubble from "./Components/MessageBubble";
+import ErrorScreen from "../Components/ErrorScreen";
+import MessageBubble from "../Components/MessageBubble";
 import Timer from "./Components/Timer";
 import "./Solo.css";
 
-const HINT_ICONS = ["/Image/Kyoto.jpg", "/Image/Osaka.jpg"];
+const KYOTO_ICON = "/Image/Kyoto.jpg";
+const OSAKA_ICON = "/Image/Osaka.jpg";
+const HINT_ICONS = [KYOTO_ICON, OSAKA_ICON];
+
+// 次のヒントが出るまでの秒数
+const HINT_INTERVAL_SEC = 10;
+
+// 読み込み中に順番に表示する関西あるある
+const LOADING_MESSAGES = [
+	"エスカレーターは右側に立つ",
+	"「行けたら行く」は行かない",
+	"アメを「アメちゃん」と言う",
+	"一家に一台たこ焼き器がある",
+	"語尾に「知らんけど」を添える",
+	"マクドナルドを「マクド」と言う",
+	"「自分」と言って相手を指す",
+	"会話のノリがテレビ並み",
+	"ナイトスクープは欠かさず見る",
+];
 
 type MessageItem = {
 	messageId: number;
@@ -21,10 +41,12 @@ type MessageItem = {
 function Solo() {
 	const [messages, setMessages] = useState<MessageItem[]>([]);
 	const [hints, setHints] = useState<string[]>([]);
+	// チャットに表示し終えたヒントの数
+	const [shownHintCount, setShownHintCount] = useState(0);
 	const [gameId, setGameId] = useState<number | null>(null);
 	const [inputValue, setInputValue] = useState("");
 
-	const [timeLeft, setTimeLeft] = useState(10);
+	const [timeLeft, setTimeLeft] = useState(HINT_INTERVAL_SEC);
 	const [hasAnswered, setHasAnswered] = useState(false);
 	const [showResultOverlay, setShowResultOverlay] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
@@ -35,17 +57,6 @@ function Solo() {
 	const [pendingHints, setPendingHints] = useState<MessageItem[]>([]);
 	const [fetchError, setFetchError] = useState(false);
 	const [loadingMsgIndex, setLoadingMsgIndex] = useState(0);
-	const loadingMessages = [
-		"エスカレーターは右側に立つ",
-		"「行けたら行く」は行かない",
-		"アメを「アメちゃん」と言う",
-		"一家に一台たこ焼き器がある",
-		"語尾に「知らんけど」を添える",
-		"マクドナルドを「マクド」と言う",
-		"「自分」と言って相手を指す",
-		"会話のノリがテレビ並み",
-		"ナイトスクープは欠かさず見る",
-	];
 
 	const navigate = useNavigate();
 
@@ -53,6 +64,7 @@ function Solo() {
 	const isAtBottomRef = useRef(true);
 	const hasFetchedData = useRef(false);
 	const giveUpTimerRef = useRef<number | null>(null);
+	const isGivingUpRef = useRef(false);
 
 	useEffect(() => {
 		if (hasFetchedData.current) return;
@@ -81,6 +93,7 @@ function Solo() {
 								icon: HINT_ICONS[0],
 							},
 						]);
+						setShownHintCount(1);
 					}
 				}
 			} catch (e) {
@@ -96,10 +109,10 @@ function Solo() {
 	useEffect(() => {
 		if (!isLoading) return;
 		const interval = setInterval(() => {
-			setLoadingMsgIndex(Math.floor(Math.random() * loadingMessages.length));
+			setLoadingMsgIndex(Math.floor(Math.random() * LOADING_MESSAGES.length));
 		}, 3000);
 		return () => clearInterval(interval);
-	}, [isLoading, loadingMessages.length]);
+	}, [isLoading]);
 
 	//スクロールされたときに、画面の最も下にあるかどうかを判定する
 	const handleScroll = () => {
@@ -124,7 +137,7 @@ function Solo() {
 		const timers: number[] = [];
 
 		for (let i = 1; i < hints.length; i++) {
-			const delay = i * 10000;
+			const delay = i * HINT_INTERVAL_SEC * 1000;
 
 			const timer = setTimeout(() => {
 				setMessages((prev) => [
@@ -136,9 +149,11 @@ function Solo() {
 						icon: HINT_ICONS[i % HINT_ICONS.length],
 					},
 				]);
+				setShownHintCount(i + 1);
 
 				if (i < hints.length - 1) {
-					setTimeLeft(11); // Reset timer
+					// 同じ時刻に1秒ごとのカウントダウンが1減らすため、1多くセットする
+					setTimeLeft(HINT_INTERVAL_SEC + 1);
 				} else {
 					setTimeLeft(0); // Stop timer after last message
 				}
@@ -188,8 +203,7 @@ function Solo() {
 				messageId: Date.now() + 1,
 				hint: isCorrect ? "正解やで！" : "不正解どす...",
 				isUser: false,
-				// biome-ignore format: URLが長いため改行を防止
-				icon: isCorrect ? "/Image/Osaka.jpg" : "/Image/Kyoto.jpg",
+				icon: isCorrect ? OSAKA_ICON : KYOTO_ICON,
 			};
 			setMessages((prev) => [...prev, responseMessage]);
 
@@ -205,28 +219,19 @@ function Solo() {
 					messageId: Date.now() + 1,
 					hint: "通信エラーが発生しました。もう一度お試しください。",
 					isUser: false,
-					icon: "/Image/Kyoto.jpg",
+					icon: KYOTO_ICON,
 				},
 			]);
 		}
 	};
 
-	// 全ヒントが表示されたかどうかを判定する
-	const allHintsShown = useMemo(() => {
-		const shownHintCount = messages.filter(
-			(m) =>
-				!m.isUser &&
-				!m.isDivider &&
-				m.hint !== "正解やで！" &&
-				m.hint !== "不正解どす..." &&
-				!m.hint.startsWith("正解は「"),
-		).length;
-		return hints.length > 0 && shownHintCount >= hints.length;
-	}, [messages, hints]);
+	const allHintsShown = hints.length > 0 && shownHintCount >= hints.length;
 
 	// ギブアップ処理：正解を取得してチャットに表示する
 	const handleGiveUp = async () => {
-		if (gameId === null) return;
+		// 正解を表示するまでの間に、もう一度押されても無視する
+		if (gameId === null || isGivingUpRef.current) return;
+		isGivingUpRef.current = true;
 
 		try {
 			const res = await fetch(`/api/solo/${gameId}/answer`);
@@ -255,7 +260,7 @@ function Solo() {
 						messageId: Date.now() + 1,
 						hint: `正解は「${correctAnswer}」やで！`,
 						isUser: false,
-						icon: "/Image/Osaka.jpg",
+						icon: OSAKA_ICON,
 					},
 				]);
 				setIsGivenUp(true);
@@ -264,13 +269,14 @@ function Solo() {
 			}, 500);
 		} catch (error) {
 			console.error("正解の取得に失敗しました:", error);
+			isGivingUpRef.current = false;
 			setMessages((prev) => [
 				...prev,
 				{
 					messageId: Date.now(),
 					hint: "通信エラーが発生しました。もう一度お試しください。",
 					isUser: false,
-					icon: "/Image/Kyoto.jpg",
+					icon: KYOTO_ICON,
 				},
 			]);
 		}
@@ -289,101 +295,81 @@ function Solo() {
 	const handleRetry = () => window.location.reload();
 	const handleShare = () => setIsShareOpen(true);
 	const handleBookmark = async () => {
-		if (!isBookmarked) {
-			setIsAnimating(true);
-			setIsBookmarked(true);
-			const postBookmark = async () => {
-				try {
-					const res = await fetch(`/api/solo/${gameId ?? 0}/bookmark`, {
-						method: "POST",
-					});
-					if (!res.ok) throw new Error("通信エラー");
-				} catch (e) {
-					console.error("ブックマーク登録に失敗しました:", e);
-					setIsBookmarked(false);
-				}
-			};
-			setTimeout(() => {
-				setIsAnimating(false);
-				postBookmark();
-				handleShare();
-			}, 2000);
+		if (isBookmarked || gameId === null) return;
+		setIsAnimating(true);
+		setIsBookmarked(true);
+		// 茶しばきのアニメーションが終わってからシェア画面を開く
+		setTimeout(() => {
+			setIsAnimating(false);
+			handleShare();
+		}, 2000);
+
+		try {
+			const res = await fetch(`/api/solo/${gameId}/bookmark`, {
+				method: "POST",
+			});
+			if (!res.ok) throw new Error("通信エラー");
+		} catch (e) {
+			console.error("ブックマーク登録に失敗しました:", e);
+			setIsBookmarked(false);
 		}
 	};
 
 	const handleCloseResult = () => {
 		setShowResultOverlay(false);
 
-		const shownHints = messages.filter(
-			(m) => !m.isUser && m.hint !== "正解やで！" && m.hint !== "不正解どす...",
-		);
-		const shownCount = shownHints.length;
-
-		if (shownCount < hints.length) {
-			const remaining = hints.slice(shownCount).map((hint, index) => ({
+		if (shownHintCount < hints.length) {
+			const remaining = hints.slice(shownHintCount).map((hint, index) => ({
 				messageId: Date.now() + 1000 + index,
 				hint: hint,
 				isUser: false,
-				icon: HINT_ICONS[(shownCount + index) % HINT_ICONS.length],
+				icon: HINT_ICONS[(shownHintCount + index) % HINT_ICONS.length],
 			}));
 			setPendingHints(remaining);
 		}
 	};
 
-	const handleShowStory = () => {
-		setMessages((prev) => {
-			const newMessages = [...prev];
-			const divider = {
-				messageId: Date.now() + 999,
-				hint: "DIVIDER",
-				isUser: false,
-				isDivider: true,
-			};
+	// 物語の続き（正解までに出なかったヒント）は、最後の「回答」と「判定」の2件の手前に入れる
+	const storyInsertIndex = messages.length - 2;
 
-			if (newMessages.length >= 2) {
-				newMessages.splice(newMessages.length - 2, 0, divider, ...pendingHints);
-			} else {
-				newMessages.push(divider, ...pendingHints);
-			}
-			return newMessages;
-		});
+	const handleShowStory = () => {
+		const divider = {
+			messageId: Date.now() + 999,
+			hint: "DIVIDER",
+			isUser: false,
+			isDivider: true,
+		};
+		setMessages([
+			...messages.slice(0, storyInsertIndex),
+			divider,
+			...pendingHints,
+			...messages.slice(storyInsertIndex),
+		]);
 		setPendingHints([]);
 	};
 
 	const handleHideStory = () => {
-		setMessages((prev) => {
-			const dividerIndex = prev.findIndex((m) => m.isDivider);
-			if (dividerIndex === -1) return prev;
+		const dividerIndex = messages.findIndex((m) => m.isDivider);
+		if (dividerIndex === -1) return;
 
-			const newMessages = [...prev];
-			// Extractstory hints to put back in pendingHints
-			const storyHints = newMessages.slice(
-				dividerIndex + 1,
-				newMessages.length - 2,
-			);
-			setPendingHints(storyHints);
-
-			// Remove divider and the hints
-			newMessages.splice(dividerIndex, storyHints.length + 1);
-			return newMessages;
-		});
+		setPendingHints(messages.slice(dividerIndex + 1, storyInsertIndex));
+		setMessages([
+			...messages.slice(0, dividerIndex),
+			...messages.slice(storyInsertIndex),
+		]);
 	};
 
 	if (isLoading) {
 		return (
 			<div className="loading-container">
 				<div className="loading-icon-container">
-					<img
-						src="/Image/Osaka.jpg"
-						alt="Osaka Icon"
-						className="loading-icon-img"
-					/>
+					<img src={OSAKA_ICON} alt="" className="loading-icon-img" />
 				</div>
 				<div className="loading-text-container">
 					<div className="loading-text">
 						関西あるある
 						<br />
-						<div className="aruaru-text">{loadingMessages[loadingMsgIndex]}</div>
+						<div className="aruaru-text">{LOADING_MESSAGES[loadingMsgIndex]}</div>
 					</div>
 				</div>
 				<div className="spinner" />
@@ -394,40 +380,14 @@ function Solo() {
 
 	if (fetchError) {
 		return (
-			<div className="loading-container">
-				<div className="loading-icon-container">
-					<img
-						src="/Image/Kyoto.jpg"
-						alt="Error Icon"
-						className="loading-icon-img"
-					/>
-				</div>
-				<div className="loading-progress-text">読み込みに失敗しました</div>
-				<div className="error-actions">
-					<button
-						type="button"
-						className="error-button-primary"
-						onClick={() => window.location.reload()}
-					>
-						もう一度試す
-					</button>
-					<button
-						type="button"
-						className="error-button-outlined"
-						onClick={() => navigate("/")}
-					>
-						タイトルに戻る
-					</button>
-				</div>
-			</div>
+			<ErrorScreen backLabel="タイトルに戻る" onBack={() => navigate("/")} />
 		);
 	}
 
 	return (
 		<div className="solo-container">
-			{showResultOverlay && gameId !== null && (
+			{showResultOverlay && (
 				<ResultOverlay
-					gameId={gameId}
 					isBookmarked={isBookmarked}
 					isAnimating={isAnimating}
 					onBookmark={handleBookmark}
@@ -443,27 +403,23 @@ function Solo() {
 				{messages.map((msg, index) => (
 					<React.Fragment key={msg.messageId}>
 						{msg.isDivider ? (
-							<div
-								className="story-start-divider"
+							<ButtonBase
+								className="story-toggle"
 								onClick={handleHideStory}
-								onKeyDown={(e) => e.key === "Enter" && handleHideStory()}
-								tabIndex={0}
-								role="button"
+								disableRipple
 							>
 								<span>物語の続きを閉じる ▲</span>
-							</div>
+							</ButtonBase>
 						) : (
 							<>
-								{pendingHints.length > 0 && index === messages.length - 2 && (
-									<div
-										className="show-story-trigger"
+								{pendingHints.length > 0 && index === storyInsertIndex && (
+									<ButtonBase
+										className="story-toggle"
 										onClick={handleShowStory}
-										onKeyDown={(e) => e.key === "Enter" && handleShowStory()}
-										tabIndex={0}
-										role="button"
+										disableRipple
 									>
 										<span>物語の続きを見る ▼</span>
-									</div>
+									</ButtonBase>
 								)}
 								<MessageBubble text={msg.hint} isUser={msg.isUser} icon={msg.icon} />
 							</>
@@ -477,7 +433,7 @@ function Solo() {
 						className="giveup-chat-bubble"
 						onClick={handleGiveUp}
 					>
-						<img src="/Image/Kyoto.jpg" alt="icon" className="giveup-icon-img" />
+						<img src={KYOTO_ICON} alt="" className="giveup-icon-img" />
 						<span className="giveup-chat-text">答えを見る？</span>
 					</button>
 				)}
@@ -494,7 +450,6 @@ function Solo() {
 				) : (
 					<div className="result-buttons-container">
 						<ResultButtons
-							gameId={gameId ?? 0}
 							isBookmarked={isBookmarked}
 							isAnimating={isAnimating}
 							onBackToTitle={handleTitle}
